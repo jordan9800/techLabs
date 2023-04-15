@@ -21,6 +21,7 @@
  - Dedicated query string filter of Laravel has been used for creating different filter for Tasks fetch api. ('priority_order(another way of implementation)', 'priority', 'status', 'due_date', 'note')
  - Laravel FormRequest has been used for validation in any POST api.
  - A global middleware has been CORS to solve the cors issue in the application.
+ - Repository pattern has been implemented for records creation(Just to showcase demo).
  - A dedicated transformer abstract class has been created to be user for model specific transformers to fetch a transformed pagination collection, collection and object.
 
 ### Api
