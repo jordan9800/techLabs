@@ -23,8 +23,8 @@
 
 ### Api
 
-- [POST](http://localhost:8000/api/register)
-- [POST](http://localhost:8000/api/login)
-- [GET](http://localhost:8000/api/logout)
-- [POST](http://localhost:8000/api/tasks)
-- [GET](http://localhost:8000/api/tasks)
+- **[Register](http://localhost:8000/api/register)**
+- **[Login](http://localhost:8000/api/login)**
+- **[Logout](http://localhost:8000/api/logout)**
+- **[Fetch Tasks](http://localhost:8000/api/tasks)**
+- **[Create Task](http://localhost:8000/api/tasks)**
