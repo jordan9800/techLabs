@@ -17,7 +17,8 @@
  - Use of Factories in the seeders has been implemented (Use command php artisan db:seed)
  - For Authentication of users Laravel Sanctum has been used.(With apis for login, register, logout).
  - Models(Task, Note) with relationship of One Task has many Notes.
- - Dedicated query string filter of Laravel has been used for creating different filter for Tasks fetch api. ('priority_order', 'priority', 'status', 'due_date', 'note')
+ - Task api order by priority, max number of notes.
+ - Dedicated query string filter of Laravel has been used for creating different filter for Tasks fetch api. ('priority_order(another way of implementation)', 'priority', 'status', 'due_date', 'note')
  - Laravel FormRequest has been used for validation in any POST api.
  - A global middleware has been CORS to solve the cors issue in the application.
  - A dedicated transformer abstract class has been created to be user for model specific transformers to fetch a transformed pagination collection, collection and object.

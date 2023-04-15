@@ -9,7 +9,7 @@ use PHPUnit\Framework\Constraint\Count;
 class TaskFilters extends QueryFilters
 {
     /**
-     * Filter by popularity.
+     * Filter for orderby priority.
      *
      * @param  string $order
      * @return Builder
@@ -42,13 +42,13 @@ class TaskFilters extends QueryFilters
     /**
      * Filter by priority.
      *
-     * @param  string $level
+     * @param  string $value
      * @return Builder
      */
-    public function status($level)
+    public function status($value)
     {
-        if(in_array($level, ['New', 'Incomplete', 'Complete'])) {
-            return $this->builder->where('status', $level);
+        if(in_array($value, ['New', 'Incomplete', 'Complete'])) {
+            return $this->builder->where('status', $value);
         }
     }
 
@@ -63,6 +63,12 @@ class TaskFilters extends QueryFilters
         return $this->builder->where('due_date', '<=', $date);
     }
 
+    /**
+     * Filter by note min number.
+     *
+     * @param  int $count
+     * @return Builder
+     */
     public function note($count = 1)
     {
         return $this->builder->Has('notes', '>=', $count);

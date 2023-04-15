@@ -7,6 +7,7 @@ use App\Http\Requests\TaskCreateRequest;
 use App\Models\Note;
 use App\Models\Task;
 use App\Transformers\TaskTransformer;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -19,8 +20,11 @@ class TaskController extends Controller
 
     public function index(TaskFilters $filters)
     {
-        $perPage = isset($request['per_page']) ? (int) $request['per_page'] : 4;
-        $tasks = Task::filter($filters)->orderBy('created_at', 'DESC')->paginate($perPage);
+        $perPage = isset($request['per_page']) ? (int) $request['per_page'] : 20;
+        $tasks = Task::filter($filters)->withCount('notes')
+                    ->orderBy('notes_count', 'desc')
+                    ->orderByRaw("FIELD(priority, \"High\", \"Medium\", \"Low\")")
+                    ->paginate($perPage);
 
         return $this->taskTransformer->transformPaginationList($tasks, ['notes']);
     }
@@ -34,7 +38,6 @@ class TaskController extends Controller
     public function store(TaskCreateRequest $request)
     {
         $fields = $request->all();
-        $attach = [];
 
         $task               = new Task();
         $task->subject      = $fields['subject'];
@@ -45,11 +48,30 @@ class TaskController extends Controller
         $task->priority     = isset($fields['priority']) ? $fields['priority'] : null;
         $task->save();
 
-        foreach($fields['notes'] as $note) {
+        $this->createNotes($fields['notes'], $task->id);
+
+        return response(['message' => 'Task with notes created successfully!'], 201);
+    }
+
+    /**
+     * Create a notes for newly created task.
+     * 
+     * @param array $notes
+     * @param int $taskId
+     * 
+     * @return void
+     */
+    protected function createNotes(array $notes, int $taskId)
+    {
+        $attach = [];
+
+        foreach($notes as $note) {
             $newNote = new Note();
-            $newNote->tasks_id = $task->id;
+            $newNote->tasks_id = $taskId;
             $newNote->subject = $note['subject'];
+
             if( isset($note['attachments'])) {
+
                 foreach($note['attachments'] as $attachment) {
                     $path = $attachment->store('/attachments/resource', ['disk' =>   'my_attachments']);
                     array_push($attach, $path);
@@ -59,7 +81,5 @@ class TaskController extends Controller
             $newNote->note = $note['note'];
             $newNote->save();
         }
-
-        return response(['message' => 'Task with notes created successfully!'], 201);
     }
 }
